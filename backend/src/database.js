@@ -8,6 +8,7 @@ const connection = async()=>{
         console.log(`Conectado con exito en ${connection.host} - ${connection.port}`)
     } catch (error) {
         console.log(error);
+        process.exit(1)  // Detiene el servidor si falla la conexión
     }
 }
 

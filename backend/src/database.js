@@ -8,7 +8,7 @@ mongoose.set('strictQuery', true) //que sea extricta
 //conexion con la base
 const connection = async()=>{ 
 try{
-    await mongoose.connect(process.env.MONGO_DB_URL,{
+    await mongoose.connect(process.env.MONGODB_URL_PRODUCTION,{
     useNewUrlParser: true,
     useUnifiedTopology: true
 });

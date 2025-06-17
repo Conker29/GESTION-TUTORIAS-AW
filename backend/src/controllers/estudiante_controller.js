@@ -105,14 +105,13 @@ const login = async (req, res) => {
 
     if (!verificarPassword) return res.status(401).json({msg: "Lo sentimos, la contraseña es incorrecta."})
     //3
-    const{nombre, apellido, direccion, telefono, _id, rol} = EstudianteBDD
+    const{nombre, apellido, telefono, _id, rol} = EstudianteBDD
 
     //4: Enviar los siguientes campos al frontend
     res.status(200).json({
         rol,
         nombre,
         apellido,
-        direccion,
         telefono,
         _id,
     })

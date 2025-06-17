@@ -16,12 +16,12 @@ let transporter = nodemailer.createTransport({
 const sendMailToRegister = (userMail, token) => {
 
     let mailOptions = {
-        from: 'emilio041114@gmail.com',
+        from: 'tutorias.esfot@gmail.com',
         to: userMail,
-        subject: "Listo para comenzar!!",
-        html: `<p>Hola, haz clic <a href="${process.env.URL_FRONTEND}confirm/${token}">aquí</a> para confirmar tu cuenta.</p>
+        subject: "CONFIRMACION DE CUENTA",
+        html: `<p>Bienvenido a la plataforma! ... <a href="${process.env.URL_FRONTEND}confirm/${token}">Haz clic aquí</a> para confirmar tu cuenta.</p>
         <hr>
-        <footer>Nostros haremos lo posible por resolver tu dudas junto a los ingenieros.</footer>
+        <footer>2025 - Todos los derechos reservados.</footer>
         `
     }
 
@@ -36,15 +36,15 @@ const sendMailToRegister = (userMail, token) => {
 
 const sendMailToRecoveryPassword = async(userMail,token)=>{
     let info = await transporter.sendMail({
-    from: 'admin@vet.com',
+    from: 'tutorias.esfot@gmail.com',
     to: userMail,
     subject: "Correo para restablecer tu contraseña",
     html: `
-    <h1>VETERINARIA - 🐶 😺</h1>
+    <h1>PLATAFORMA DE GESTION DE TUTORIAS😎</h1>
     <hr>
-    <a href=${process.env.URL_FRONTEND}reset/${token}>Clic para reestablecer tu contraseña</a>
+    <a href=${process.env.URL_FRONTEND}reset/${token}>Haz clic para reestablecer tu contraseña</a>
     <hr>
-    <footer>Bienvenido</footer>
+    <footer>2025 - TUTORIAS ESFOT - Todos los derechos reservados.</footer>
     `
     });
     console.log("Mensaje enviado satisfactoriamente: ", info.messageId);

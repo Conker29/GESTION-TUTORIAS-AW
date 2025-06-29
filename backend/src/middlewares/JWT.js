@@ -15,7 +15,7 @@ const verificarTokenJWT = async (req, res, next) => {
     try {
         const token = authorization.split(" ")[1];
         const { id, rol } = jwt.verify(token,process.env.JWT_SECRET)
-        if (rol === "Estudiante") {
+        if (rol === "estudiante") {
             req.EstudianteBDD = await Estudiante.findById(id).lean().select("-password")
             next()
         }

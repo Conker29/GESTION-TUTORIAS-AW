@@ -1,5 +1,7 @@
 import Estudiante from "../models/estudiante.js"
 import {sendMailToRegister, sendMailToRecoveryPassword} from "../config/nodemailer.js"
+import { crearTokenJWT } from "../middlewares/JWT.js"
+import mongoose from "mongoose" 
 
 const registro = async (req,res)=>{
     const {email,password} = req.body
@@ -56,7 +58,6 @@ const comprobarTokenPassword = async (req, res) => {
     //3
     await EstudianteBDD.save()
     //4
-    
     res.status(200).json({msg:"Token confirmado ya puedes crear tu password"})
 }
 
@@ -106,15 +107,61 @@ const login = async (req, res) => {
     if (!verificarPassword) return res.status(401).json({msg: "Lo sentimos, la contraseña es incorrecta."})
     //3
     const{nombre, apellido,telefono, _id, rol} = EstudianteBDD
+    const token = crearTokenJWT(EstudianteBDD._id,EstudianteBDD.rol)
 
     //4: Enviar los siguientes campos al frontend
     res.status(200).json({
+        token,
         rol,
         nombre,
         apellido,
         telefono,
         _id,
+        email: EstudianteBDD.email
     })
+}
+
+const perfil =(req,res)=>{
+		const {token,confirmEmail,createdAt,updatedAt,__v,...datosPerfil} = req.EstudianteBDD
+    res.status(200).json({
+        msg: "Perfil del estudiante", 
+        perfil: datosPerfil  //Los datos del perfil se encuentran en una clave llamada perfil
+    });
+}
+
+const actualizarPerfil = async (req,res)=>{
+    const {id} = req.params
+    const {nombre,apellido,direccion,celular,email} = req.body
+    if( !mongoose.Types.ObjectId.isValid(id) ) return res.status(404).json({msg:`Lo sentimos, debe ser un id válido`});
+    if (Object.values(req.body).includes("")) return res.status(400).json({msg:"Lo sentimos, debes llenar todos los campos"});
+    const EstudianteBDD = await Estudiante.findById(id)
+    if(!EstudianteBDD) return res.status(404).json({msg:`Lo sentimos, no existe el Estudiante ${id}`})
+    if (EstudianteBDD.email != email)
+    {
+        const EstudianteBDDMail = await Estudiante.findOne({email})
+        if (EstudianteBDDMail)
+        {
+            return res.status(404).json({msg:`Lo sentimos, el email existe ya se encuentra registrado`})  
+        }
+    }
+        EstudianteBDD.nombre = nombre ?? EstudianteBDD.nombre
+        EstudianteBDD.apellido = apellido ?? EstudianteBDD.apellido
+        EstudianteBDD.direccion = direccion ?? EstudianteBDD.direccion
+        EstudianteBDD.celular = celular ?? EstudianteBDD.celular
+        EstudianteBDD.email = email ?? EstudianteBDD.email
+        await EstudianteBDD.save()
+        console.log(EstudianteBDD)
+        res.status(200).json(EstudianteBDD)
+}
+
+const actualizarPassword = async (req,res)=>{
+    const EstudianteBDD = await Estudiante.findById(req.EstudianteBDD._id)
+    if(!EstudianteBDD) return res.status(404).json({msg:`Lo sentimos, no existe el Estudiante ${id}`})
+    const verificarPassword = await EstudianteBDD.matchPassword(req.body.passwordactual)
+    if(!verificarPassword) return res.status(404).json({msg:"Lo sentimos, el password actual no es el correcto"})
+    EstudianteBDD.password = await EstudianteBDD.encrypPassword(req.body.passwordnuevo)
+    await EstudianteBDD.save()
+    res.status(200).json({msg:"Password actualizado correctamente"})
 }
 
 export {
@@ -123,5 +170,9 @@ export {
     recuperarPassword,
     comprobarTokenPassword,
     crearNuevoPassword,
-    login
+    login,
+    perfil,
+    actualizarPerfil,
+    actualizarPassword
 }
+

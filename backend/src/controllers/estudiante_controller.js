@@ -88,7 +88,7 @@ const crearNuevoPassword = async (req, res) => {
 
     res.status(200).json({msg:"Ya puede iniciar sesion con su nueva contraseña."})
 }
-// AGREGAR AL DOCUMENTO 
+
 const login = async (req, res) => {
     //1
     const {email, password} = req.body

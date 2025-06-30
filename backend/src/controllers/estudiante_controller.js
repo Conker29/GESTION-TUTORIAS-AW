@@ -123,10 +123,7 @@ const login = async (req, res) => {
 
 const perfil =(req,res)=>{
 		const {token,confirmEmail,createdAt,updatedAt,__v,...datosPerfil} = req.EstudianteBDD
-    res.status(200).json({
-        msg: "Perfil del estudiante", 
-        perfil: datosPerfil  //Los datos del perfil se encuentran en una clave llamada perfil
-    });
+    res.status(200).json(datosPerfil);
 }
 
 const actualizarPerfil = async (req,res)=>{
@@ -146,7 +143,6 @@ const actualizarPerfil = async (req,res)=>{
     }
         EstudianteBDD.nombre = nombre ?? EstudianteBDD.nombre
         EstudianteBDD.apellido = apellido ?? EstudianteBDD.apellido
-        EstudianteBDD.direccion = direccion ?? EstudianteBDD.direccion
         EstudianteBDD.celular = celular ?? EstudianteBDD.celular
         EstudianteBDD.email = email ?? EstudianteBDD.email
         await EstudianteBDD.save()
@@ -175,4 +171,3 @@ export {
     actualizarPerfil,
     actualizarPassword
 }
-
